@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>YanCarz - Master QA Audit 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .status-critical { color: #ef4444; border-color: #ef4444; }
+    </style>
+</head>
+<body class="text-slate-300 pb-20">
+
+    <!-- Header Hero -->
+    <header class="relative py-20 px-6 border-b border-slate-800 bg-gradient-to-b from-indigo-900/20 to-transparent">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="inline-block px-4 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-xs font-black mb-6 uppercase tracking-widest">
+                Rapport de Certification Qualité Final
+            </div>
+            <h1 class="text-6xl font-black text-white mb-6 tracking-tighter">
+                Audit Écosystème <span class="text-indigo-500 italic">YanCarz</span>
+            </h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto">
+                Analyse complète de l'intégrité logicielle : Frontend, Backend et Infrastructure de production.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <div class="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-full border border-slate-700">
+                    <div class="w-2 h-2 bg-rose-500 rounded-full animate-ping"></div>
+                    <span class="text-xs font-bold text-white uppercase">4 Anomalies Critiques</span>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-full border border-slate-700">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Expert QA: Wiam BABIOUI</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 -mt-10">
+        
+        <!-- Grid des projets -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- PORTAL -->
+            <div class="glass p-8 rounded-[2.5rem] hover:scale-105 transition-all">
+                <div class="flex justify-between items-center mb-6">
+                    <i class="fas fa-globe text-3xl text-indigo-400"></i>
+                    <span class="text-[10px] font-black bg-rose-500 text-white px-2 py-1 rounded">ALERT</span>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Portal Client</h2>
+                <p class="text-slate-400 text-sm mb-6">Test de réservation et tunnel de vente public.</p>
+                <ul class="text-xs space-y-3 mb-8">
+                    <li class="flex gap-2 text-rose-400 font-bold"><i class="fas fa-times-circle"></i> Faille prix à 0 MAD</li>
+                    <li class="flex gap-2 text-rose-400 font-bold"><i class="fas fa-times-circle"></i> Bug routage 404 (F5)</li>
+                    <li class="flex gap-2 text-emerald-400"><i class="fas fa-check-circle"></i> Design conforme</li>
+                </ul>
+                <a href="test_portal/test_integration_portal.html" class="block text-center py-3 bg-indigo-600 text-white rounded-xl font-bold text-xs hover:bg-indigo-500 transition">VOIR LE RAPPORT</a>
+            </div>
+
+            <!-- ADMIN -->
+            <div class="glass p-8 rounded-[2.5rem] hover:scale-105 transition-all border-rose-500/50">
+                <div class="flex justify-between items-center mb-6">
+                    <i class="fas fa-user-shield text-3xl text-blue-400"></i>
+                    <span class="text-[10px] font-black bg-rose-600 text-white px-2 py-1 rounded">CRITICAL</span>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Admin Pro</h2>
+                <p class="text-slate-400 text-sm mb-6">Gestion globale et statistiques de la plateforme.</p>
+                <ul class="text-xs space-y-3 mb-8">
+                    <li class="flex gap-2 text-rose-500 font-black"><i class="fas fa-bomb"></i> ÉCHEC PERSISTANCE (CRUD)</li>
+                    <li class="flex gap-2 text-rose-400 font-bold"><i class="fas fa-times-circle"></i> Désync Dashboard (4 vs 5)</li>
+                    <li class="flex gap-2 text-emerald-400"><i class="fas fa-check-circle"></i> Navigation V2 validée</li>
+                </ul>
+                <a href="test_admin/rapport_critique_crud_admin.html" class="block text-center py-3 bg-rose-600 text-white rounded-xl font-bold text-xs hover:bg-rose-500 transition shadow-lg shadow-rose-600/20">VOIR L'ALERTE P0</a>
+            </div>
+
+            <!-- BACKEND API -->
+            <div class="glass p-8 rounded-[2.5rem] hover:scale-105 transition-all">
+                <div class="flex justify-between items-center mb-6">
+                    <i class="fas fa-server text-3xl text-emerald-400"></i>
+                    <span class="text-[10px] font-black bg-rose-500 text-white px-2 py-1 rounded">ALERT</span>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Backend API</h2>
+                <p class="text-slate-400 text-sm mb-6">Audit technique des services .NET Azure.</p>
+                <ul class="text-xs space-y-3 mb-8">
+                    <li class="flex gap-2 text-rose-400 font-bold"><i class="fas fa-times-circle"></i> Erreurs 500 sur POST</li>
+                    <li class="flex gap-2 text-amber-400 font-bold"><i class="fas fa-clock"></i> Latence critique (5.5s)</li>
+                    <li class="flex gap-2 text-emerald-400"><i class="fas fa-check-circle"></i> Schémas JSON validés</li>
+                </ul>
+                <a href="admin/test_backend/rapport_api_global.html" class="block text-center py-3 bg-slate-700 text-white rounded-xl font-bold text-xs hover:bg-slate-600 transition">VOIR L'AUDIT API</a>
+            </div>
+
+        </div>
+
+        <!-- ANALYSE EXPERTE FINALE -->
+        <section class="mt-16 glass p-10 rounded-[3rem] border-l-8 border-indigo-500 relative overflow-hidden">
+            <div class="relative z-10">
+                <h3 class="text-indigo-400 font-black uppercase text-xs tracking-widest mb-6">Conclusion Technique de l'Audit</h3>
+                <p class="text-2xl text-white font-light leading-relaxed italic">
+                    "Bien que l'architecture visuelle soit conforme aux attentes, l'écosystème YanCarz présente des <strong>ruptures de flux critiques</strong>. Les défaillances de persistance en base de données et les failles de logique transactionnelle (0 MAD) sont des risques majeurs pour le lancement. L'automatisation Selenium et Postman a permis de localiser ces défauts avant l'impact client."
+                </p>
+                <div class="mt-10 flex items-center gap-4 text-white font-bold underline decoration-indigo-500">
+                    <i class="fas fa-file-signature text-2xl"></i> Signature : Wiam BABIOUI, Ingénieure QA.
+                </div>
+            </div>
+            <i class="fas fa-shield-check absolute -right-10 -bottom-10 text-[15rem] text-white/5"></i>
+        </section>
+
+    </main>
+
+    <footer class="mt-20 py-10 text-center opacity-40">
+        <p class="text-[10px] font-bold uppercase tracking-[0.6em]">Certification Software Quality Assurance • 2026</p>
+    </footer>
+
+</body>
+</html>
