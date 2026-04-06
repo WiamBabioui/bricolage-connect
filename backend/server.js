@@ -18,89 +18,59 @@ const initSocket      = require('./socket');
 const app    = express();
 const server = http.createServer(app);
 
-// ✅ CONFIGURATION CORS DYNAMIQUE
-// On accepte l'URL de ton futur site Vercel ET localhost pour tes tests
-const allowedOrigins = [
-  process.env.CLIENT_URL, // L'URL Vercel que tu ajouteras dans Railway
-  'http://localhost:5173',
-  'http://127.0.0.1:5173'
-];
-
-// ✅ Dans backend/server.js, remplace la config CORS par celle-ci :
-
-const io = new Server(server, {
-  cors: {
-    origin: function (origin, callback) {
-      // Autorise localhost ET toutes les adresses qui contiennent "bricolage-connect"
-      if (!origin || 
-          origin.startsWith('http://localhost') || 
-          origin.includes('bricolage-connect')) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-  transports: ['websocket', 'polling'],
-});
-
-// Fais pareil pour app.use(cors(...)) :
-app.use(cors({
+// ---------------------------------------------------------
+// ✅ CONFIGURATION CORS UNIQUE ET ROBUSTE
+// ---------------------------------------------------------
+const corsOptions = {
   origin: function (origin, callback) {
+    // Autorise : 
+    // 1. Pas d'origine (ex: tests serveurs ou fichiers locaux)
+    // 2. Localhost (ton PC)
+    // 3. N'importe quelle URL contenant "vercel.app" (ton site en ligne)
+    // 4. Ton URL CLIENT_URL configurée sur Railway
     if (!origin || 
         origin.startsWith('http://localhost') || 
-        origin.includes('bricolage-connect')) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
-initSocket(io);
-
-app.use(helmet({ crossOriginResourcePolicy: false }));
-
-// ✅ Appliquer la même logique au middleware CORS d'Express
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || 
-        origin.startsWith('http://localhost') || 
+        origin.startsWith('http://127.0.0.1') ||
         origin.includes('vercel.app') || 
+        origin.includes('bricolage-connect') ||
         origin === process.env.CLIENT_URL) {
       callback(null, true);
     } else {
+      console.log("CORS bloqué pour l'origine :", origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
 
+// ✅ Appliquer CORS à Express
+app.use(cors(corsOptions));
+
+// ✅ Appliquer CORS à Socket.io
+const io = new Server(server, {
+  cors: corsOptions,
+  transports: ['websocket', 'polling'],
+});
+
+// Initialiser les sockets
 initSocket(io);
 
+// ---------------------------------------------------------
+// ✅ MIDDLEWARES CLASSIQUES
+// ---------------------------------------------------------
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(express.json());
+
+// Créer le dossier uploads s'il n'existe pas
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
+app.use('/uploads', express.static(uploadsDir));
 
-app.use(helmet({ crossOriginResourcePolicy: false }));
-
-// ✅ CONFIGURATION CORS POUR EXPRESS
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
-
-app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Routes
+// ---------------------------------------------------------
+// ✅ ROUTES API
+// ---------------------------------------------------------
 app.use('/api/auth',         authRoutes);
 app.use('/api/specialites',  specialtyRoutes);
 app.use('/api/services',     serviceRoutes);
@@ -112,11 +82,14 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     message: 'Bricolage Connect API is running',
-    env: process.env.NODE_ENV 
+    env: process.env.NODE_ENV,
+    db_host: process.env.DB_HOST ? 'Configured' : 'Missing'
   });
 });
 
-// ✅ PORT ET HOST POUR RAILWAY
+// ---------------------------------------------------------
+// ✅ DÉMARRAGE DU SERVEUR
+// ---------------------------------------------------------
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server running on port ${PORT}`);
