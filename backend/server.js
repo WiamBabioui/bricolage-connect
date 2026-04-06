@@ -26,18 +26,17 @@ const allowedOrigins = [
   'http://127.0.0.1:5173'
 ];
 
-// ✅ Version plus robuste pour éviter l'erreur "Not allowed by CORS"
+// ✅ Dans backend/server.js, remplace la config CORS par celle-ci :
+
 const io = new Server(server, {
   cors: {
     origin: function (origin, callback) {
-      // Autorise si : pas d'origin (mobile/tests), localhost, ou ton domaine vercel
+      // Autorise localhost ET toutes les adresses qui contiennent "bricolage-connect"
       if (!origin || 
           origin.startsWith('http://localhost') || 
-          origin.includes('vercel.app') || 
-          origin === process.env.CLIENT_URL) {
+          origin.includes('bricolage-connect')) {
         callback(null, true);
       } else {
-        console.log("CORS bloqué pour l'origine :", origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -47,6 +46,19 @@ const io = new Server(server, {
   transports: ['websocket', 'polling'],
 });
 
+// Fais pareil pour app.use(cors(...)) :
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || 
+        origin.startsWith('http://localhost') || 
+        origin.includes('bricolage-connect')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 initSocket(io);
 
 app.use(helmet({ crossOriginResourcePolicy: false }));
