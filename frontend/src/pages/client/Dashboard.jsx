@@ -7,11 +7,11 @@ import logo from '../../assets/logo.jpg';
 const seenKey = (userId, otherId) => `seenCount_${userId}_${otherId}`;
 
 const NAV_ITEMS = [
-  { icon: 'dashboard',     label: 'Dashboard',      path: '/client/dashboard' },
-  { icon: 'assignment',    label: 'Mes demandes',   path: '/client/requests'  },
-  { icon: 'chat_bubble',   label: 'Messages',       path: '/client/messages'  },
-  { icon: 'person_search', label: 'Trouver un pro', path: '/client/workers'   },
-  { icon: 'account_circle',label: 'Profil',         path: '/client/profile'   },
+  { icon: 'dashboard',     label: 'Dashboard',      shortLabel: 'Dashboard', path: '/client/dashboard' },
+  { icon: 'assignment',    label: 'Mes demandes',   shortLabel: 'Demandes',  path: '/client/requests'  },
+  { icon: 'chat_bubble',   label: 'Messages',       shortLabel: 'Messages',  path: '/client/messages'  },
+  { icon: 'person_search', label: 'Trouver un pro', shortLabel: 'Trouver',   path: '/client/workers'   },
+  { icon: 'account_circle',label: 'Profil',         shortLabel: 'Profil',    path: '/client/profile'   },
 ];
 
 export default function ClientDashboard() {
@@ -236,8 +236,8 @@ export default function ClientDashboard() {
 
         <div className="db-content" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-          {/* Stats */}
-          <div className="db-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+          {/* Stats — gridTemplateColumns géré par CSS seulement */}
+          <div className="db-stats-grid" style={{ display: 'grid', gap: '1.5rem' }}>
             {[
               { icon: 'pending_actions', label: 'Total demandes',    value: String(totalRequests), bg: '#fff7ed', color: '#f97316' },
               { icon: 'handshake',       label: 'Jobs acceptés',     value: String(accepted),      bg: '#fdf4e7', color: '#b87332' },
@@ -341,17 +341,17 @@ export default function ClientDashboard() {
 
       {/* ══ BOTTOM NAV mobile ══ */}
       <nav className="db-mobile-nav">
-        {NAV_ITEMS.map(({ icon, label, path }) => {
+        {NAV_ITEMS.map(({ icon, shortLabel, path }) => {
           const active = path === currentPath;
           const isMsgs = path === '/client/messages';
           return (
-            <Link key={path} to={path} className="db-mobile-nav-item" style={{
+            <Link key={path} to={path} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px',
               textDecoration: 'none', color: active ? '#b87332' : '#94a3b8',
-              fontSize: '0.65rem', fontWeight: 600, position: 'relative', flex: 1, padding: '0.5rem 0',
+              fontSize: '0.6rem', fontWeight: 600, position: 'relative', flex: 1, padding: '0.5rem 0',
             }}>
               <span className="material-symbols-outlined" style={{ fontSize: '1.4rem' }}>{icon}</span>
-              <span>{label}</span>
+              <span>{shortLabel}</span>
               {isMsgs && unreadCount > 0 && (
                 <span style={{ position: 'absolute', top: 4, right: '50%', transform: 'translateX(10px)', backgroundColor: '#22c55e', color: 'white', borderRadius: '999px', fontSize: '0.6rem', fontWeight: 700, padding: '1px 5px', minWidth: 16, textAlign: 'center' }}>{unreadCount}</span>
               )}
@@ -361,58 +361,54 @@ export default function ClientDashboard() {
       </nav>
 
       <style>{`
+        /* ── Desktop : stats 3 colonnes ── */
+        .db-stats-grid { grid-template-columns: repeat(3, 1fr); }
+
         /* ══ Sidebar icon-only (≤ 1024px) ══ */
         @media (max-width: 1024px) {
-          .db-sidebar           { width: 72px !important; }
-          .db-sidebar-brand     { display: none !important; }
-          .db-nav-label         { display: none !important; }
-          .db-nav-badge         { right: 4px !important; }
-          .db-header            { padding: 0 1.25rem !important; }
-          .db-content           { padding: 1.5rem !important; }
-          .db-stats-grid        { gap: 1rem !important; }
-          .db-promo-grid        { gap: 1rem !important; }
+          .db-sidebar       { width: 72px !important; }
+          .db-sidebar-brand { display: none !important; }
+          .db-nav-label     { display: none !important; }
+          .db-nav-badge     { right: 4px !important; }
+          .db-header        { padding: 0 1.25rem !important; }
+          .db-content       { padding: 1.5rem !important; }
+          .db-stats-grid    { gap: 1rem !important; }
+          .db-promo-grid    { gap: 1rem !important; }
         }
 
-        /* ══ iPad Mini / Tablettes (≤ 768px) ══ */
+        /* ══ Tablettes / Mobile (≤ 768px) ══ */
         @media (max-width: 768px) {
-          .db-sidebar           { display: none !important; }
-          .db-mobile-nav        { display: flex !important; }
-          .db-main              { padding-bottom: 64px !important; }
-          .db-header            { padding: 0 1rem !important; height: 64px !important; }
-          .db-header-sub        { display: none !important; }
-          .db-header-title      { font-size: 1.15rem !important; }
-          .db-content           { padding: 1rem !important; gap: 1.25rem !important; }
-          .db-stats-grid        { grid-template-columns: repeat(3, 1fr) !important; gap: 0.75rem !important; }
-          .db-stat-value        { font-size: 1.5rem !important; }
-          .db-promo-grid        { grid-template-columns: 1fr !important; }
-          .db-table-header      { padding: 1rem !important; }
-        }
-
-        /* ══ Galaxy Z Fold 5 / Surface Duo (≤ 653px) ══ */
-        @media (max-width: 653px) {
-          .db-stats-grid        { grid-template-columns: repeat(3, 1fr) !important; }
-          .db-stat-value        { font-size: 1.25rem !important; }
+          .db-sidebar       { display: none !important; }
+          .db-mobile-nav    { display: flex !important; }
+          .db-main          { padding-bottom: 64px !important; }
+          .db-header        { padding: 0 1rem !important; height: 64px !important; }
+          .db-header-sub    { display: none !important; }
+          .db-header-title  { font-size: 1.15rem !important; }
+          .db-content       { padding: 1rem !important; gap: 1.25rem !important; }
+          /* ✅ Stats empilées : 1 par ligne */
+          .db-stats-grid    { grid-template-columns: 1fr !important; gap: 0.75rem !important; }
+          .db-stat-value    { font-size: 1.5rem !important; }
+          .db-promo-grid    { grid-template-columns: 1fr !important; }
+          .db-table-header  { padding: 1rem !important; }
         }
 
         /* ══ iPhone 14 Pro Max / Pixel 7 (≤ 430px) ══ */
         @media (max-width: 430px) {
-          .db-stats-grid        { grid-template-columns: repeat(3, 1fr) !important; gap: 0.5rem !important; }
-          .db-content           { padding: 0.875rem !important; gap: 1rem !important; }
-          .db-header-title      { font-size: 1rem !important; }
+          .db-content       { padding: 0.875rem !important; gap: 1rem !important; }
+          .db-header-title  { font-size: 1rem !important; }
         }
 
         /* ══ iPhone SE (≤ 375px) ══ */
         @media (max-width: 375px) {
-          .db-stats-grid        { grid-template-columns: 1fr 1fr !important; }
-          .db-content           { padding: 0.75rem !important; }
+          .db-content       { padding: 0.75rem !important; }
         }
 
         /* ══ Galaxy Z Fold 5 plié (≤ 344px) ══ */
         @media (max-width: 344px) {
-          .db-content           { padding: 0.625rem !important; }
+          .db-content       { padding: 0.625rem !important; }
         }
 
-        /* Mobile bottom nav — caché par défaut */
+        /* Mobile bottom nav */
         .db-mobile-nav {
           display: none;
           position: fixed;
