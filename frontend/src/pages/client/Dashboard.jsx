@@ -267,11 +267,23 @@ export default function ClientDashboard() {
             {loading ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>Chargement...</div>
             ) : requests.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '4rem', color: '#94a3b8' }}>
-                <p style={{ fontWeight: 600, color: '#475569', margin: '0 0 1rem 0' }}>Aucune demande pour l'instant</p>
-                <Link to="/client/new-request" style={{ backgroundColor: '#b87332', color: 'white', padding: '0.75rem 1.5rem', borderRadius: '10px', fontWeight: 700, textDecoration: 'none' }}>Créer ma première demande</Link>
-              </div>
-            ) : (
+  <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#94a3b8' }}>
+    <p style={{ fontWeight: 600, color: '#475569', margin: '0 0 1.5rem 0', fontSize: '0.95rem' }}>Aucune demande pour l'instant</p>
+    <Link to="/client/new-request" style={{ 
+      display: 'inline-block', // <--- TRÈS IMPORTANT : transforme le lien en bloc solide
+      backgroundColor: '#b87332', 
+      color: 'white', 
+      padding: '0.8rem 1.5rem', 
+      borderRadius: '10px', 
+      fontWeight: 700, 
+      textDecoration: 'none',
+      fontSize: '0.9rem',
+      lineHeight: '1.2' // Assure que le texte ne se chevauche pas si il passe sur 2 lignes
+    }}>
+      Créer ma première demande
+    </Link>
+  </div>
+) : (
               <>
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '560px' }}>

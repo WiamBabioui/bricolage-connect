@@ -7,11 +7,11 @@ import logo from '../../assets/logo.jpg';
 const seenKey = (userId, otherId) => `seenCount_${userId}_${otherId}`;
 
 const NAV_ITEMS = [
-  { icon: 'dashboard',      label: 'Dashboard',        path: '/worker/dashboard' },
-  { icon: 'work',           label: 'Jobs disponibles',  path: '/worker/jobs'      },
-  { icon: 'chat_bubble',    label: 'Messages',          path: '/worker/messages'  },
-  { icon: 'star',           label: 'Mes avis',          path: '/worker/ratings'   },
-  { icon: 'account_circle', label: 'Profil',            path: '/worker/profile'   },
+  { icon: 'dashboard',      label: 'Dashboard',        shortLabel: 'Dashboard', path: '/worker/dashboard' },
+  { icon: 'work',           label: 'Jobs disponibles',  shortLabel: 'Jobs',      path: '/worker/jobs'      },
+  { icon: 'chat_bubble',    label: 'Messages',          shortLabel: 'Messages',  path: '/worker/messages'  },
+  { icon: 'star',           label: 'Mes avis',          shortLabel: 'Mes avis',  path: '/worker/ratings'   },
+  { icon: 'account_circle', label: 'Profil',            shortLabel: 'Profil',    path: '/worker/profile'   },
 ];
 
 export default function WorkerDashboard() {
@@ -120,7 +120,7 @@ export default function WorkerDashboard() {
         </nav>
 
         <div style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-          <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: '8px', width: '100%', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500, color: 'rgba(245,242,236,0.65)', transition: 'all 0.2s', fontFamily: 'Inter, sans-serif' }}
+          <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: '8px', width: '100%', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500, color: 'rgba(245,242,236,0.65)', fontFamily: 'Inter, sans-serif' }}
             onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(239,68,68,0.1)'}
             onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>
             <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', flexShrink: 0 }}>logout</span>
@@ -134,9 +134,7 @@ export default function WorkerDashboard() {
 
         <header className="db-header" style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2rem', backgroundColor: '#ffffff', borderBottom: '1px solid #f1f5f9', flexShrink: 0 }}>
           <div style={{ minWidth: 0 }}>
-            <h2 className="db-header-title" style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e293b', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              Bonjour, {user?.nom || 'Professionnel'} 👷
-            </h2>
+            <h2 className="db-header-title" style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e293b', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Bonjour, {user?.nom || 'Professionnel'} 👷</h2>
             <p className="db-header-sub" style={{ color: '#64748b', fontSize: '0.875rem', margin: 0 }}>Gérez vos missions et votre profil professionnel.</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}>
@@ -247,8 +245,8 @@ export default function WorkerDashboard() {
 
         <div className="db-content" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-          {/* Stats */}
-          <div className="db-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+          {/* Stats — Exactement comme le Dashboard Client */}
+          <div className="db-stats-grid" style={{ display: 'grid', gap: '1.5rem' }}>
             {[
               { icon: 'work',        label: 'Jobs disponibles', value: String(jobs.length),       bg: '#eff6ff', color: '#3b82f6' },
               { icon: 'star',        label: 'Note moyenne',      value: '4.9',                    bg: '#fefce8', color: '#eab308' },
@@ -260,7 +258,7 @@ export default function WorkerDashboard() {
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <p style={{ color: '#64748b', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>{label}</p>
-                  <p className="db-stat-value" style={{ fontSize: '1.75rem', fontWeight: 900, color: '#1e293b', margin: 0 }}>{value}</p>
+                  <p className="db-stat-value" style={{ fontSize: '2rem', fontWeight: 900, color: '#1e293b', margin: 0 }}>{value}</p>
                 </div>
               </div>
             ))}
@@ -333,7 +331,7 @@ export default function WorkerDashboard() {
 
       {/* ══ BOTTOM NAV mobile ══ */}
       <nav className="db-mobile-nav">
-        {NAV_ITEMS.map(({ icon, label, path }) => {
+        {NAV_ITEMS.map(({ icon, shortLabel, path }) => {
           const active = path === currentPath;
           const isMsgs = path === '/worker/messages';
           return (
@@ -343,7 +341,7 @@ export default function WorkerDashboard() {
               fontSize: '0.6rem', fontWeight: 600, position: 'relative', flex: 1, padding: '0.5rem 0',
             }}>
               <span className="material-symbols-outlined" style={{ fontSize: '1.4rem' }}>{icon}</span>
-              <span>{label}</span>
+              <span>{shortLabel}</span>
               {isMsgs && unreadCount > 0 && (
                 <span style={{ position: 'absolute', top: 4, right: '50%', transform: 'translateX(10px)', backgroundColor: '#22c55e', color: 'white', borderRadius: '999px', fontSize: '0.6rem', fontWeight: 700, padding: '1px 5px', minWidth: 16, textAlign: 'center' }}>{unreadCount}</span>
               )}
@@ -353,6 +351,9 @@ export default function WorkerDashboard() {
       </nav>
 
       <style>{`
+        /* ── Desktop : stats 3 colonnes ── */
+        .db-stats-grid { grid-template-columns: repeat(3, 1fr); }
+
         /* ══ Sidebar icon-only (≤ 1024px) ══ */
         @media (max-width: 1024px) {
           .db-sidebar           { width: 72px !important; }
@@ -365,7 +366,7 @@ export default function WorkerDashboard() {
           .db-promo-grid        { gap: 1rem !important; }
         }
 
-        /* ══ iPad Mini / Tablettes (≤ 768px) ══ */
+        /* ══ Tablettes / Mobile (≤ 768px) ══ */
         @media (max-width: 768px) {
           .db-sidebar           { display: none !important; }
           .db-mobile-nav        { display: flex !important; }
@@ -374,21 +375,18 @@ export default function WorkerDashboard() {
           .db-header-sub        { display: none !important; }
           .db-header-title      { font-size: 1.15rem !important; }
           .db-content           { padding: 1rem !important; gap: 1.25rem !important; }
-          .db-stats-grid        { grid-template-columns: repeat(3, 1fr) !important; gap: 0.75rem !important; }
-          .db-stat-value        { font-size: 1.4rem !important; }
+          
+          /* ✅ Stats empilées : 1 par ligne (comme client) */
+          .db-stats-grid        { grid-template-columns: 1fr !important; gap: 0.75rem !important; }
+          .db-stat-value        { font-size: 1.5rem !important; }
+          
           .db-promo-grid        { grid-template-columns: 1fr !important; }
           .db-table-header      { padding: 1rem !important; }
           .db-job-item          { padding: 1rem !important; }
         }
 
-        /* ══ Galaxy Z Fold 5 / Surface Duo (≤ 653px) ══ */
-        @media (max-width: 653px) {
-          .db-stat-value        { font-size: 1.2rem !important; }
-        }
-
         /* ══ iPhone 14 Pro Max / Pixel 7 (≤ 430px) ══ */
         @media (max-width: 430px) {
-          .db-stats-grid        { gap: 0.5rem !important; }
           .db-content           { padding: 0.875rem !important; gap: 1rem !important; }
           .db-header-title      { font-size: 1rem !important; }
           .db-job-item          { flex-direction: column !important; align-items: flex-start !important; }
@@ -397,16 +395,10 @@ export default function WorkerDashboard() {
 
         /* ══ iPhone SE (≤ 375px) ══ */
         @media (max-width: 375px) {
-          .db-stats-grid        { grid-template-columns: 1fr 1fr !important; }
           .db-content           { padding: 0.75rem !important; }
         }
 
-        /* ══ Galaxy Z Fold 5 plié (≤ 344px) ══ */
-        @media (max-width: 344px) {
-          .db-content           { padding: 0.625rem !important; }
-        }
-
-        /* Mobile bottom nav — caché par défaut */
+        /* Mobile bottom nav */
         .db-mobile-nav {
           display: none;
           position: fixed;
