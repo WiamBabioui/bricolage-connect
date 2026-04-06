@@ -29,14 +29,59 @@ export default function MyRequests() {
   };
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', backgroundColor: '#ffffff', minHeight: '100vh', padding: '2rem' }}>
+    <div className="requests-container" style={{ fontFamily: 'Inter, sans-serif', backgroundColor: '#ffffff', minHeight: '100vh', padding: '2rem' }}>
+      
+      <style>{`
+        /* 📱 RESPONSIVITÉ TÉLÉPHONE (Standard & Petits écrans) */
+        @media (max-width: 600px) {
+          .requests-container { padding: 1rem !important; }
+          
+          .header-row { 
+            flex-direction: column !important; 
+            align-items: flex-start !important; 
+            gap: 1.25rem !important; 
+          }
+          
+          .btn-new-request { 
+            width: 100% !important; 
+            justify-content: center !important; 
+          }
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          .empty-state { padding: 3rem 1rem !important; }
+          .empty-state h3 { font-size: 1.15rem !important; }
+
+          /* Correction du bouton qui se casse en deux */
+          .btn-primary {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            max-width: 280px !important;
+            white-space: nowrap !important;
+            padding: 0.8rem 1rem !important;
+          }
+
+          .card-main { 
+            flex-direction: column !important; 
+            align-items: flex-start !important; 
+          }
+          
+          .card-actions { 
+            width: 100% !important; 
+            align-items: flex-start !important; 
+            margin-top: 1rem !important;
+          }
+          
+          .card-actions button { width: 100% !important; }
+        }
+      `}</style>
+
+      <div className="header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1e293b', margin: '0 0 0.4rem 0' }}>Mes demandes</h1>
           <p style={{ color: '#64748b', margin: 0 }}>Suivez l'état de toutes vos demandes de service.</p>
         </div>
-        <Link to="/client/new-request" style={{
+        <Link to="/client/new-request" className="btn-new-request" style={{
           display: 'flex', alignItems: 'center', gap: '0.5rem',
           backgroundColor: '#b87332', color: 'white', padding: '0.75rem 1.5rem',
           borderRadius: '10px', fontWeight: 700, textDecoration: 'none', fontSize: '0.875rem',
@@ -53,11 +98,18 @@ export default function MyRequests() {
           Chargement...
         </div>
       ) : requests.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '5rem', color: '#94a3b8' }}>
+        <div className="empty-state" style={{ textAlign: 'center', padding: '5rem', color: '#94a3b8' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '4rem', display: 'block', marginBottom: '1.5rem' }}>assignment</span>
           <h3 style={{ fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>Aucune demande pour l'instant</h3>
           <p style={{ marginBottom: '1.5rem' }}>Créez votre première demande de service.</p>
-          <Link to="/client/new-request" style={{ backgroundColor: '#b87332', color: 'white', padding: '0.75rem 1.5rem', borderRadius: '10px', fontWeight: 700, textDecoration: 'none' }}>
+          <Link to="/client/new-request" className="btn-primary" style={{ 
+            backgroundColor: '#b87332', 
+            color: 'white', 
+            padding: '0.75rem 1.5rem', 
+            borderRadius: '10px', 
+            fontWeight: 700, 
+            textDecoration: 'none' 
+          }}>
             Créer une demande
           </Link>
         </div>
@@ -71,9 +123,9 @@ export default function MyRequests() {
                 border: '1.5px solid #f1f5f9', padding: '1.5rem',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.06)'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                <div className="card-main" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                       <h3 style={{ fontWeight: 700, color: '#1e293b', margin: 0, fontSize: '1rem' }}>{req.titre}</h3>
                       <span style={{ padding: '2px 10px', borderRadius: '999px', backgroundColor: st.bg, color: st.color, fontSize: '0.72rem', fontWeight: 700 }}>
                         {st.label}
@@ -84,7 +136,7 @@ export default function MyRequests() {
                         {req.description.slice(0, 120)}{req.description.length > 120 ? '...' : ''}
                       </p>
                     )}
-                    <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#64748b', fontSize: '0.8rem' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '0.95rem' }}>location_on</span>
                         {req.ville}
@@ -95,17 +147,13 @@ export default function MyRequests() {
                           {req.budget} MAD
                         </span>
                       )}
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#94a3b8', fontSize: '0.8rem' }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: '0.95rem' }}>calendar_today</span>
-                        {req.date_creation?.split('T')[0]}
-                      </span>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+                  <div className="card-actions" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
                     {req.statut === 'accepte' && (
                       <button onClick={() => handleComplete(req.id)} style={{
-                        backgroundColor: '#22c55e', color: 'white', padding: '0.5rem 1.25rem',
+                        backgroundColor: '#22c55e', color: 'white', padding: '0.6rem 1.25rem',
                         borderRadius: '8px', fontWeight: 700, border: 'none', cursor: 'pointer',
                         fontSize: '0.8rem', fontFamily: 'Inter, sans-serif'
                       }}>
