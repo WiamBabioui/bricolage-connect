@@ -26,12 +26,18 @@ const allowedOrigins = [
   'http://127.0.0.1:5173'
 ];
 
+// ✅ Version plus robuste pour éviter l'erreur "Not allowed by CORS"
 const io = new Server(server, {
   cors: {
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      // Autorise si : pas d'origin (mobile/tests), localhost, ou ton domaine vercel
+      if (!origin || 
+          origin.startsWith('http://localhost') || 
+          origin.includes('vercel.app') || 
+          origin === process.env.CLIENT_URL) {
         callback(null, true);
       } else {
+        console.log("CORS bloqué pour l'origine :", origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -40,6 +46,25 @@ const io = new Server(server, {
   },
   transports: ['websocket', 'polling'],
 });
+
+initSocket(io);
+
+app.use(helmet({ crossOriginResourcePolicy: false }));
+
+// ✅ Appliquer la même logique au middleware CORS d'Express
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || 
+        origin.startsWith('http://localhost') || 
+        origin.includes('vercel.app') || 
+        origin === process.env.CLIENT_URL) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 
 initSocket(io);
 
